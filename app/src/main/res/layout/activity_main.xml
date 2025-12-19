@@ -7,13 +7,171 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- Заголовок -->
     <TextView
+        android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:layout_marginTop="24dp"
+        android:text="Калькуляторы самогонщика"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+
+    <!-- Калькулятор браги по весу сахара -->
+    <Button
+        android:id="@+id/btn_braga_height"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="#DDF40202"
+        android:padding="12dp"
+        android:text="Браги по весу сахара"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_braga_volume"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleText"
+        tools:ignore="HardcodedText" />
+
+    <!-- Калькулятор браги по объёму -->
+    <Button
+        android:id="@+id/btn_braga_volume"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="#B40041"
+        android:padding="12dp"
+        android:text="Браги по конечному объёму"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_dilution"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_braga_height"
+        tools:ignore="HardcodedText" />
+
+    <!-- Разбавление спирта -->
+    <Button
+        android:id="@+id/btn_dilution"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="#0270A8"
+        android:padding="12dp"
+        android:text="Разбавления спирта водой"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_corrector"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_braga_volume"
+        tools:ignore="HardcodedText" />
+
+    <!-- Корректировка спиртометра -->
+    <Button
+        android:id="@+id/btn_corrector"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="#0D9200"
+        android:padding="12dp"
+        android:text="Корректировки показаний спиртометра"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_fractional"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_dilution"
+        tools:ignore="HardcodedText" />
+
+    <!-- Дробная перегонка -->
+    <Button
+        android:id="@+id/btn_fractional"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="#6314FD"
+        android:padding="12dp"
+        android:text="Дробной перегонки"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_refractometr"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_corrector"
+        tools:ignore="HardcodedText" />
+
+    <!-- Коррекция рефрактометра -->
+    <Button
+        android:id="@+id/btn_refractometr"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="#0622D7"
+        android:padding="12dp"
+        android:text="Корректировки показаний рефрактометра"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_kokteil"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_fractional"
+        tools:ignore="HardcodedText" />
+
+    <!-- Калькулятор коктейлей -->
+    <Button
+        android:id="@+id/btn_kokteil"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="#FB8C00"
+        android:padding="12dp"
+        android:text="Крепости коктейлей"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_timer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_refractometr"
+        tools:ignore="HardcodedText" />
+
+    <!-- Калькулятор скорости отбора -->
+    <Button
+        android:id="@+id/btn_timer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="#9B3603"
+        android:padding="12dp"
+        android:text="Скорости отбора"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_kokteil"
+        tools:ignore="HardcodedText" />
+
+    <!-- О программе -->
+    <Button
+        android:id="@+id/btn_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="#757575"
+        android:padding="12dp"
+        android:text="О программе"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_timer"
+        tools:ignore="HardcodedText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
