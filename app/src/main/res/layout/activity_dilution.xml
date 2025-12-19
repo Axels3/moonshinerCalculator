@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context=".DilutionActivity">
+
+    <TextView
+        android:id="@+id/dilutionTextView"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:text="Разбавление спирта водой"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/TempTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/homeButton"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/TempTextView"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="right|center_vertical"
+        android:text="Температура спирта"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/TempTextEdit"
+        app:layout_constraintEnd_toStartOf="@+id/TempTextEdit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/TempTextEdit"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <EditText
+        android:id="@+id/TempTextEdit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:autofillHints="temperature"
+        android:hint="°C"
+        android:gravity="left|center_vertical"
+        android:inputType="numberDecimal"
+        android:labelFor="@+id/TempTextEdit"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/strengthTextEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/TempTextView"
+        app:layout_constraintTop_toBottomOf="@+id/dilutionTextView"
+        tools:ignore="HardcodedText,LabelFor,RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/strengthTextView"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="right|center_vertical"
+        android:text="Крепость спирта"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/strengthTextEdit"
+        app:layout_constraintEnd_toStartOf="@+id/strengthTextEdit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/strengthTextEdit"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <EditText
+        android:id="@+id/strengthTextEdit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:autofillHints="alcohol_percentage"
+        android:hint="%,Об"
+        android:gravity="left|center_vertical"
+        android:inputType="numberDecimal"
+        android:labelFor="@+id/strengthTextEdit"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/finalStrengthTextEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/strengthTextView"
+        app:layout_constraintTop_toBottomOf="@+id/TempTextEdit"
+        tools:ignore="HardcodedText,LabelFor,RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/finalStrengthTextView"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="right|center_vertical"
+        android:text="Итоговая крепость"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/finalStrengthTextEdit"
+        app:layout_constraintEnd_toStartOf="@+id/finalStrengthTextEdit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/finalStrengthTextEdit"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <EditText
+        android:id="@+id/finalStrengthTextEdit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:autofillHints="target_alcohol_percentage"
+        android:hint="%,Об"
+        android:gravity="left|center_vertical"
+        android:inputType="numberDecimal"
+        android:labelFor="@+id/finalStrengthTextEdit"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/finalVolumeEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/finalStrengthTextView"
+        app:layout_constraintTop_toBottomOf="@+id/strengthTextEdit"
+        tools:ignore="HardcodedText,LabelFor,RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/FinalVolumeSpinner"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="right|center_vertical"
+        android:text="Объём спирта"
+        app:layout_constraintBottom_toBottomOf="@+id/finalVolumeEdit"
+        app:layout_constraintEnd_toStartOf="@+id/finalVolumeEdit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/finalVolumeEdit"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <EditText
+        android:id="@+id/finalVolumeEdit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:autofillHints="volume"
+        android:gravity="left|center_vertical"
+        android:hint="Л."
+        android:inputType="numberDecimal"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/resultTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/FinalVolumeSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/finalStrengthTextEdit"
+        tools:ignore="HardcodedText,LabelFor,RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/resultTextView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:gravity="left|top"
+        android:padding="12dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/finalVolumeEdit"
+        tools:ignore="RtlHardcoded"/>
+    <!-- Кнопка "Назад" -->
+    <ImageView
+        android:id="@+id/homeButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Вернуться назад"
+        android:padding="12dp"
+        android:src="@mipmap/ic_back"
+        app:layout_constraintBottom_toBottomOf="@+id/dilutionTextView"
+        app:layout_constraintEnd_toStartOf="@+id/dilutionTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/dilutionTextView"
+        tools:ignore="HardcodedText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
