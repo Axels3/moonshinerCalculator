@@ -1,0 +1,33 @@
+# Gradle
+.gradle/
+build/
+!app/src/main/assets/
+
+# Android
+local.properties
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+
+# IDE
+.idea/
+*.iws
+.vscode/
+*.swp
+*.swo
+
+# Mac
+.DS_Store
+
+# APK
+*.apk
+*.apks
+*.aab
+
+# Logs
+*.log
+
+# Environment
+.env
+config.json
