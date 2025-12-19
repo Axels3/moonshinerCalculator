@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context=".FractionalActivity">
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="right|center_vertical"
+        android:text="Крепость СС"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/distillateStrengthEdit"
+        app:layout_constraintEnd_toStartOf="@+id/distillateStrengthEdit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/distillateStrengthEdit"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <EditText
+        android:id="@+id/distillateitogEdit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:autofillHints="%"
+        android:gravity="center"
+        android:hint="%,об"
+        android:inputType="numberDecimal"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView7"
+        app:layout_constraintTop_toBottomOf="@+id/tailsPercentEdit"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/tempEdit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:autofillHints="%"
+        android:gravity="center"
+        android:hint="°C"
+        android:inputType="numberDecimal"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView11"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView9"
+        app:layout_constraintTop_toTopOf="@+id/textView11"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="Калькулятор дробной перегонки"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/homeButton"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/distillateVolumeEdit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:autofillHints="литры"
+        android:gravity="center"
+        android:hint="Л."
+        android:inputType="numberDecimal"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/distillateStrengthEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView6"
+        app:layout_constraintTop_toBottomOf="@+id/tempEdit"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/distillateStrengthEdit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:autofillHints="%"
+        android:gravity="center"
+        android:hint="%,Об"
+        android:inputType="numberDecimal"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/headsPercentEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView7"
+        app:layout_constraintTop_toBottomOf="@+id/distillateVolumeEdit"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/headsPercentEdit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:autofillHints="%"
+        android:gravity="center"
+        android:hint="%"
+        android:inputType="numberDecimal"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView8"
+        app:layout_constraintTop_toBottomOf="@+id/distillateStrengthEdit"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/tailsPercentEdit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:autofillHints="%"
+        android:gravity="center"
+        android:hint="%"
+        android:inputType="numberDecimal"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/distillateitogEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView9"
+        app:layout_constraintTop_toBottomOf="@+id/headsPercentEdit"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="0dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="16dp"
+        android:background="#F0F0F0"
+        android:padding="12dp"
+        android:text="Введите объём и крепость дистиллята"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/distillateitogEdit"
+        tools:ignore="HardcodedText" />
+
+    <ImageView
+        android:id="@+id/homeButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Вернуться назад"
+        android:padding="12dp"
+        android:src="@mipmap/ic_back"
+        app:layout_constraintBottom_toBottomOf="@+id/titleText"
+        app:layout_constraintEnd_toStartOf="@+id/titleText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/titleText"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="right|center_vertical"
+        android:text="Объём СС"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/distillateVolumeEdit"
+        app:layout_constraintEnd_toStartOf="@+id/distillateVolumeEdit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/distillateVolumeEdit"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="right|center_vertical"
+        android:text="Крепость на выходе"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/distillateitogEdit"
+        app:layout_constraintEnd_toStartOf="@+id/distillateStrengthEdit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/distillateitogEdit"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="right|center_vertical"
+        android:text="Процент голов"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/headsPercentEdit"
+        app:layout_constraintEnd_toStartOf="@+id/headsPercentEdit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/headsPercentEdit"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="right|center_vertical"
+        android:text="Процент хвостов"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tailsPercentEdit"
+        app:layout_constraintEnd_toStartOf="@+id/tailsPercentEdit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tailsPercentEdit"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:gravity="right|center_vertical"
+        android:text="Температура СС"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/tempEdit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleText"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

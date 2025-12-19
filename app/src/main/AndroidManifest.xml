@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MoonshinerCalculator">
         <activity
+            android:name=".FractionalActivity"
+            android:exported="false" />
+        <activity
             android:name=".DilutionActivity"
             android:exported="false" />
         <activity
