@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context=".BragVolumeActivity">
+
+    <!-- Заголовок -->
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="Калькулятор расчёта сахарной браги по объёму"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/homeButton"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+
+    <!-- Выбор типа сахара -->
+    <Spinner
+        android:id="@+id/sugarTypeSpinner"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleText" />
+
+    <!-- Выбор типа объёма -->
+    <Spinner
+        android:id="@+id/volumeTypeSpinner"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sugarTypeSpinner" />
+
+    <!-- Поле ввода: объём -->
+    <EditText
+        android:id="@+id/volumeEdit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:autofillHints="Литров."
+        android:gravity="center"
+        android:hint="Л."
+        android:inputType="numberDecimal"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/volumeLabel"
+        app:layout_constraintTop_toBottomOf="@+id/volumeTypeSpinner"
+        tools:ignore="HardcodedText" />
+
+    <!-- Поле ввода: количество сахара -->
+    <TextView
+        android:id="@+id/volumeLabel"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="right|center_vertical"
+        android:text="Объём:"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/volumeEdit"
+        app:layout_constraintEnd_toStartOf="@+id/volumeEdit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/volumeEdit"
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <EditText
+        android:id="@+id/sugarAmountEdit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:autofillHints="кг"
+        android:gravity="center"
+        android:hint="Кг."
+        android:inputType="numberDecimal"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/sugarLabel"
+        app:layout_constraintTop_toBottomOf="@+id/volumeEdit"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/sugarLabel"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="right|center_vertical"
+        android:text="Сахар:"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/sugarAmountEdit"
+        app:layout_constraintEnd_toStartOf="@+id/sugarAmountEdit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/sugarAmountEdit"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <!-- Результат -->
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="0dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="16dp"
+        android:background="#F0F0F0"
+        android:padding="12dp"
+        android:text="Введите данные для расчёта"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sugarAmountEdit"
+        tools:ignore="HardcodedText" />
+
+    <!-- Кнопка "Назад" -->
+    <ImageView
+        android:id="@+id/homeButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Вернуться назад"
+        android:padding="12dp"
+        android:src="@mipmap/ic_back"
+        app:layout_constraintBottom_toBottomOf="@+id/titleText"
+        app:layout_constraintEnd_toStartOf="@+id/titleText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/titleText"
+        tools:ignore="HardcodedText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

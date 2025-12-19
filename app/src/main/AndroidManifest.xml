@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MoonshinerCalculator">
         <activity
+            android:name=".BragVolumeActivity"
+            android:exported="false" />
+        <activity
             android:name=".BragHeightActivity"
             android:exported="false" />
         <activity
