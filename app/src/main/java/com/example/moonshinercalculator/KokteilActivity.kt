@@ -93,7 +93,7 @@ class KokteilActivity : AppCompatActivity() {
         val sugarGrams = sugarWeightEdit.text.toString().trim().toDoubleOrNull() ?: 0.0
 
         if (components.isEmpty() && sugarGrams <= 0) {
-            resultText.text = "Введите компоненты или сахар"
+            resultText.text = "⚠️• Введите компоненты"
             return
         }
 
@@ -109,15 +109,12 @@ class KokteilActivity : AppCompatActivity() {
         // Полный объём смеси (жидкость + объём, занимаемый сахаром)
         val totalEffectiveVolume = totalVolume + sugarVolumeEquivalent
 
-        if (totalEffectiveVolume == 0.0) {
-            resultText.text = "0.0 %"
-            return
-        }
+
 
         // Крепость коктейля (в %)
         val strength = (totalAlcohol / totalEffectiveVolume) * 100
 
-        resultText.text = String.format("%.2f %%", strength)
+        resultText.text = String.format("Крепость коктейля - %.1f %%", strength)
     }
 
     private fun getComponent(alcoholEdit: EditText, volumeEdit: EditText): Component {
