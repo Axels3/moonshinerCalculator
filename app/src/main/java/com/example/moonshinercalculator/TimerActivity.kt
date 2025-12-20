@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
@@ -26,7 +27,7 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var resetButton: ImageButton
     private lateinit var volumeInput: EditText
     private lateinit var speedResult: TextView
-    private lateinit var backButton: ImageButton
+    private lateinit var backButton: ImageView
 
     private var countDownTimer: CountDownTimer? = null
     private var isTimerRunning = false
