@@ -1,6 +1,7 @@
 package com.example.moonshinercalculator
 
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.media.AudioAttributes
 import android.media.SoundPool
 import android.os.Bundle
@@ -50,10 +51,16 @@ class TimerActivity : AppCompatActivity() {
 
     private var inputBuffer = ""
 
+    // SharedPreferences для сохранения состояния
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_timer)
+
+        // Инициализация SharedPreferences
+        sharedPreferences = getSharedPreferences("TimerPrefs", MODE_PRIVATE)
 
         // Создаем временные файлы для звуков (WAV)
         try {
@@ -69,6 +76,9 @@ class TimerActivity : AppCompatActivity() {
         setupButtonClick()
         setupInputListeners()
         setupTimeInputWatcher()
+
+        // Восстановление состояния при старте
+        restoreState()
     }
 
     private fun initViews() {
@@ -96,7 +106,6 @@ class TimerActivity : AppCompatActivity() {
         shortSoundId = soundPool.load(shortToneFile.absolutePath, 1)
         longSoundId = soundPool.load(longToneFile.absolutePath, 1)
     }
-
 
     private fun createToneData(durationMs: Int): ByteArray {
         val sampleRate = 8000
@@ -149,15 +158,12 @@ class TimerActivity : AppCompatActivity() {
         return wavFile
     }
 
-
-
     private fun intToByteArray(i: Int): ByteArray = byteArrayOf(
         (i and 0xff).toByte(),
         (i shr 8 and 0xff).toByte(),
         (i shr 16 and 0xff).toByte(),
         (i shr 24 and 0xff).toByte()
     )
-
 
     private fun shortToByteArray(s: Short): ByteArray = byteArrayOf(
         (s.toInt() and 0xff).toByte(),
@@ -275,12 +281,14 @@ class TimerActivity : AppCompatActivity() {
                 // Короткий звук за 2 и 1 секунду
                 if (secondsLeft == 2L || secondsLeft == 1L) {
                     soundPool.play(shortSoundId, 1f, 1f, 0, 0, 1f)
+                } else {
+                    if (secondsLeft == 0L) {
+                        soundPool.play(longSoundId, 1f, 1f, 0, 0, 1f)
+                    }
                 }
             }
 
             override fun onFinish() {
-                // Длинный звук на последней секунде (500 мс)
-                soundPool.play(longSoundId, 1f, 1f, 0, 0, 1f)
                 timerFinished()
             }
         }.start()
@@ -333,33 +341,70 @@ class TimerActivity : AppCompatActivity() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun calculateSpeed() {
-        val timeStr = if (isTimerRunning) timerText.text.toString() else timeInput.text.toString()
-        val volumeStr = volumeInput.text.toString().trim()
+private fun calculateSpeed() {
+    val timeStr = if (isTimerRunning) timerText.text.toString() else timeInput.text.toString()
+    val volumeStr = volumeInput.text.toString().trim()
 
-        if (volumeStr.isEmpty()) {
-            speedResult.text = "Скорость: — мл/час"
-            return
+    if (volumeStr.isEmpty()) {
+        speedResult.text = "Скорость: — мл/час"
+        return
+    }
+
+    val volume = volumeStr.toDoubleOrNull()
+    if (volume == null || volume < 0) {
+        speedResult.text = "Ошибка: объём ≥ 0"
+        return
+    }
+
+    val (minutes, seconds) = parseTime(timeStr) ?: (0L to 0L)
+    val totalMinutes = minutes + seconds / 60.0
+    if (totalMinutes <= 0) {
+        speedResult.text = "Скорость: — мл/час"
+        return
+    }
+
+    val speed = (volume / totalMinutes) * 60
+    val formattedTime = formatTime((minutes * 60 + seconds))
+    val formattedSpeed = "%.1f".format(speed)
+
+    speedResult.text = "за $formattedTime набралось $volume мл.\nСкорость отбора: $formattedSpeed мл/час"
+}
+
+    // Сохранение состояния при выходе
+    @SuppressLint("UseKtx")
+    private fun saveState() {
+        with(sharedPreferences.edit()) {
+            putLong("targetSeconds", targetSeconds)
+            putString("inputBuffer", inputBuffer)
+            putString("timeInput", timeInput.text.toString())
+            putString("volumeInput", volumeInput.text.toString())
+            putString("speedResult", speedResult.text.toString())
+            apply()
         }
+    }
 
-        val volume = volumeStr.toDoubleOrNull()
-        if (volume == null || volume < 0) {
-            speedResult.text = "Ошибка: объём ≥ 0"
-            return
-        }
+    // Восстановление состояния при открытии
+    private fun restoreState() {
+        targetSeconds = sharedPreferences.getLong("targetSeconds", 0)
+        inputBuffer = sharedPreferences.getString("inputBuffer", "") ?: ""
 
-        val (minutes, seconds) = parseTime(timeStr) ?: (0L to 0L)
-        val totalMinutes = minutes + seconds / 60.0
-        if (totalMinutes <= 0) {
-            speedResult.text = "Скорость: — мл/час"
-            return
-        }
+        val savedTimeInput = sharedPreferences.getString("timeInput", "00:00")
+        val savedVolumeInput = sharedPreferences.getString("volumeInput", "0")
+        val savedSpeedResult = sharedPreferences.getString("speedResult", "Скорость: — мл/час")
 
-        val speed = (volume / totalMinutes) * 60
-        speedResult.text = "Скорость: ${"%.1f".format(speed)} мл/час"
+        timeInput.setText(savedTimeInput)
+        volumeInput.setText(savedVolumeInput)
+        speedResult.text = savedSpeedResult
+        calculateSpeed()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        saveState()
     }
 
     override fun onDestroy() {
+        saveState()
         countDownTimer?.cancel()
         soundPool.release()
         super.onDestroy()
