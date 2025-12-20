@@ -5,15 +5,16 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="20dp"
     tools:context=".TimerActivity">
 
-    <ImageButton
+    <ImageView
         android:id="@+id/homeButton3"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Вернуться назад"
+        android:contentDescription="На главную"
         android:padding="12dp"
         android:src="@mipmap/ic_back"
         app:layout_constraintBottom_toBottomOf="@+id/timerTextName"
@@ -121,11 +122,14 @@
     <TextView
         android:id="@+id/speedResult"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        android:background="#A5BFBF"
+        android:backgroundTint="#A5BFBF"
         android:gravity="center"
         android:text="Скорость: — мл/час"
         android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/volumeInput"

@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
+    android:orientation="vertical"
     tools:context=".BragVolumeActivity">
 
     <!-- Заголовок -->
@@ -106,12 +107,14 @@
     <TextView
         android:id="@+id/resultText"
         android:layout_width="0dp"
-        android:layout_height="250dp"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:background="#F0F0F0"
+        android:background="#A5BFBF"
+        android:backgroundTint="#A5BFBF"
         android:padding="12dp"
         android:text="Введите данные для расчёта"
         android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sugarAmountEdit"
