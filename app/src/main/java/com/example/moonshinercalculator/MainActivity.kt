@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btn_braga_volume).setOnClickListener {
-            startActivity(Intent(this, BragaVolumeActivity::class.java))
+            startActivity(Intent(this, BragVolumeActivity::class.java))
         }
 
         findViewById<Button>(R.id.btn_dilution).setOnClickListener {
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, TimerActivity::class.java))
         }
         findViewById<Button>(R.id.btn_info).setOnClickListener {
-            startActivity(Intent(this, infoActivity::class.java))
+            startActivity(Intent(this, InfoActivity::class.java))
         }
     }
 
