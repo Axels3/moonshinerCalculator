@@ -1,5 +1,6 @@
 package com.example.moonshinercalculator
 
+import android.annotation.SuppressLint
 import android.media.AudioAttributes
 import android.media.SoundPool
 import android.os.Bundle
@@ -10,13 +11,13 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import kotlin.math.sin
 
 class TimerActivity : AppCompatActivity() {
 
@@ -26,7 +27,7 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var resetButton: ImageButton
     private lateinit var volumeInput: EditText
     private lateinit var speedResult: TextView
-    private lateinit var backButton: ImageButton
+    private lateinit var backButton: ImageView
 
     private var countDownTimer: CountDownTimer? = null
     private var isTimerRunning = false
@@ -94,13 +95,6 @@ class TimerActivity : AppCompatActivity() {
         // Загружаем звуки
         shortSoundId = soundPool.load(shortToneFile.absolutePath, 1)
         longSoundId = soundPool.load(longToneFile.absolutePath, 1)
-
-        // Проверка загрузки
-        soundPool.setOnLoadCompleteListener { _, sampleId, status ->
-            if (status != 0) {
-                // Можно логировать ошибку
-            }
-        }
     }
 
 
@@ -170,6 +164,7 @@ class TimerActivity : AppCompatActivity() {
         (s.toInt() shr 8 and 0xff).toByte()
     )
 
+    @SuppressLint("SetTextI18n")
     private fun setupViews() {
         timerText.visibility = View.GONE
         timeInput.visibility = View.VISIBLE
@@ -184,6 +179,7 @@ class TimerActivity : AppCompatActivity() {
         volumeInput.inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setupButtonClick() {
         startStopButton.setOnClickListener {
             if (isTimerRunning) {
@@ -329,12 +325,14 @@ class TimerActivity : AppCompatActivity() {
         return minutes to seconds
     }
 
+    @SuppressLint("DefaultLocale")
     private fun formatTime(totalSeconds: Long): String {
         val minutes = totalSeconds / 60
         val seconds = totalSeconds % 60
         return String.format("%02d:%02d", minutes, seconds)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun calculateSpeed() {
         val timeStr = if (isTimerRunning) timerText.text.toString() else timeInput.text.toString()
         val volumeStr = volumeInput.text.toString().trim()
