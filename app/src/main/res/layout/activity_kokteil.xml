@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".KokteilActivity">
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="Калькулятор крепости коктейля"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/numHeader"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/homeButton"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+
+    <!-- Заголовки колонок -->
+    <TextView
+        android:id="@+id/numHeader"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="№"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/alcohol1Edit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleText"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/alcoholHeader"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="Крепость, %"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/volume1Edit"
+        app:layout_constraintStart_toEndOf="@+id/numHeader"
+        app:layout_constraintTop_toBottomOf="@+id/titleText"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/volumeHeader"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="Объём, мл"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/alcoholHeader"
+        app:layout_constraintTop_toBottomOf="@+id/titleText"
+        tools:ignore="HardcodedText" />
+
+    <!-- Компонент 1 -->
+    <TextView
+        android:id="@+id/num1"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="1"
+        app:layout_constraintEnd_toStartOf="@+id/alcohol1Edit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/numHeader"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/alcohol1Edit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:autofillHints="%"
+        android:hint="0.0"
+        android:inputType="numberDecimal"
+        android:imeOptions="actionNext"
+        app:layout_constraintEnd_toStartOf="@+id/volume1Edit"
+        app:layout_constraintStart_toEndOf="@+id/num1"
+        app:layout_constraintTop_toBottomOf="@+id/alcoholHeader"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/volume1Edit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:autofillHints="мл"
+        android:hint="0.0"
+        android:inputType="numberDecimal"
+        android:imeOptions="actionNext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/alcohol1Edit"
+        app:layout_constraintTop_toBottomOf="@+id/volumeHeader"
+        tools:ignore="HardcodedText" />
+
+    <!-- Компонент 2 -->
+    <TextView
+        android:id="@+id/num2"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="2"
+        app:layout_constraintEnd_toStartOf="@+id/alcohol2Edit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/num1"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/alcohol2Edit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:autofillHints="%"
+        android:hint="0.0"
+        android:inputType="numberDecimal"
+        android:imeOptions="actionNext"
+        app:layout_constraintEnd_toStartOf="@+id/volume2Edit"
+        app:layout_constraintStart_toEndOf="@+id/num2"
+        app:layout_constraintTop_toBottomOf="@+id/alcohol1Edit"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/volume2Edit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:autofillHints="мл"
+        android:hint="0.0"
+        android:inputType="numberDecimal"
+        android:imeOptions="actionNext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/alcohol2Edit"
+        app:layout_constraintTop_toBottomOf="@+id/volume1Edit"
+        tools:ignore="HardcodedText" />
+
+    <!-- Компонент 3 -->
+    <TextView
+        android:id="@+id/num3"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="3"
+        app:layout_constraintEnd_toStartOf="@+id/alcohol3Edit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/num2"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/alcohol3Edit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:autofillHints="%"
+        android:hint="0.0"
+        android:inputType="numberDecimal"
+        android:imeOptions="actionNext"
+        app:layout_constraintEnd_toStartOf="@+id/volume3Edit"
+        app:layout_constraintStart_toEndOf="@+id/num3"
+        app:layout_constraintTop_toBottomOf="@+id/alcohol2Edit"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/volume3Edit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:autofillHints="мл"
+        android:hint="0.0"
+        android:inputType="numberDecimal"
+        android:imeOptions="actionNext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/alcohol3Edit"
+        app:layout_constraintTop_toBottomOf="@+id/volume2Edit"
+        tools:ignore="HardcodedText" />
+
+    <!-- Компонент 4 -->
+    <TextView
+        android:id="@+id/num4"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="4"
+        app:layout_constraintEnd_toStartOf="@+id/alcohol4Edit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/num3"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/alcohol4Edit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:autofillHints="%"
+        android:hint="0.0"
+        android:inputType="numberDecimal"
+        android:imeOptions="actionNext"
+        app:layout_constraintEnd_toStartOf="@+id/volume4Edit"
+        app:layout_constraintStart_toEndOf="@+id/num4"
+        app:layout_constraintTop_toBottomOf="@+id/alcohol3Edit"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/volume4Edit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:autofillHints="мл"
+        android:hint="0.0"
+        android:inputType="numberDecimal"
+        android:imeOptions="actionNext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/alcohol4Edit"
+        app:layout_constraintTop_toBottomOf="@+id/volume3Edit"
+        tools:ignore="HardcodedText" />
+
+    <!-- Новый компонент: Сахар -->
+    <TextView
+        android:id="@+id/num5"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="5"
+        app:layout_constraintEnd_toStartOf="@+id/sugarLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/num4"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/sugarLabel"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="Сахар, гр"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/sugarWeightEdit"
+        app:layout_constraintStart_toEndOf="@+id/num5"
+        app:layout_constraintTop_toBottomOf="@+id/alcohol4Edit"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/sugarWeightEdit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:autofillHints=""
+        android:hint="0.0"
+        android:inputType="numberDecimal"
+        android:imeOptions="actionDone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/sugarLabel"
+        app:layout_constraintTop_toBottomOf="@+id/volume4Edit"
+        tools:ignore="HardcodedText" />
+
+    <!-- Результат -->
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:background="#F0F0F0"
+        android:gravity="center"
+        android:text="0.0 %"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sugarWeightEdit"
+        tools:ignore="HardcodedText" />
+
+    <!-- Кнопка "Назад" -->
+    <ImageView
+        android:id="@+id/homeButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Вернуться назад"
+        android:padding="12dp"
+        android:src="@mipmap/ic_back"
+        app:layout_constraintBottom_toBottomOf="@+id/titleText"
+        app:layout_constraintEnd_toStartOf="@+id/titleText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/titleText"
+        tools:ignore="HardcodedText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
