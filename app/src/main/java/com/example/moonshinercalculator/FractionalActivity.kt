@@ -4,13 +4,16 @@ import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
+import android.text.SpannableStringBuilder
 import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.edit
+import androidx.core.view.WindowCompat
 
 class FractionalActivity : AppCompatActivity() {
 
@@ -24,16 +27,16 @@ class FractionalActivity : AppCompatActivity() {
 
     private lateinit var sharedPreferences: SharedPreferences
 
-    @SuppressLint("MissingInflatedId", "SetTextI18n")
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_fractional)
 
         // Инициализация SharedPreferences
         sharedPreferences = getSharedPreferences("FractionalPrefs", MODE_PRIVATE)
 
-        // Инициализация полей
+        // Привязка элементов
         distillateVolumeEdit = findViewById(R.id.distillateVolumeEdit)
         distillateStrengthEdit = findViewById(R.id.distillateStrengthEdit)
         tempEdit = findViewById(R.id.tempEdit)
@@ -42,20 +45,12 @@ class FractionalActivity : AppCompatActivity() {
         distillateItogEdit = findViewById(R.id.distillateitogEdit)
         resultText = findViewById(R.id.resultText)
 
-        // Восстановление сохранённых значений
-        restoreState()
-
-        // Установка значений по умолчанию
-        if (headsPercentEdit.text.isEmpty()) headsPercentEdit.setText("10")
-        if (tailsPercentEdit.text.isEmpty()) tailsPercentEdit.setText("15")
-        if (tempEdit.text.isEmpty()) tempEdit.setText("20")
-        if (distillateItogEdit.text.isEmpty()) distillateItogEdit.setText("40")
-
         // Кнопка "Назад"
-        val homeButton = findViewById<ImageView>(R.id.homeButton)
-        homeButton.setOnClickListener {
-            finish()
-        }
+        val backButton = findViewById<ImageView>(R.id.homeButton)
+        backButton.setOnClickListener { finish() }
+
+        // Восстановление состояния
+        restoreState()
 
         // TextWatcher для автоматического пересчёта
         val textWatcher = object : TextWatcher {
@@ -74,11 +69,9 @@ class FractionalActivity : AppCompatActivity() {
         tailsPercentEdit.addTextChangedListener(textWatcher)
         distillateItogEdit.addTextChangedListener(textWatcher)
 
-        // Первичный расчёт
         calculateFractional()
     }
 
-    @SuppressLint("SetTextI18n")
     private fun calculateFractional() {
         val volumeStr = distillateVolumeEdit.text.toString().trim()
         val strengthStr = distillateStrengthEdit.text.toString().trim()
@@ -87,87 +80,167 @@ class FractionalActivity : AppCompatActivity() {
         val tailsPercentStr = tailsPercentEdit.text.toString().trim()
         val itogStrengthStr = distillateItogEdit.text.toString().trim()
 
-        if (volumeStr.isEmpty() || strengthStr.isEmpty() || tempStr.isEmpty() || itogStrengthStr.isEmpty()) {
-            resultText.text = "Введите все данные"
-            return
-        }
+        val errors = mutableListOf<String>()
+        var temp = 20.0 // по умолчанию
+        var itogStrength = 40.0 // по умолчанию
+        var headsPercent = 0.0 // по умолчанию 0, если не указано
+        var tailsPercent = 0.0 // по умолчанию 0, если не указано
+        var hasTempWarning = false
+        var hasItogWarning = false
+        var hasHeadsEmpty = false
+        var hasTailsEmpty = false
 
+        // Проверка объёма
         val volume = volumeStr.toDoubleOrNull()
+        if (volumeStr.isEmpty()) {
+            errors.add("⚠️• Объём спирта не указан")
+        } else if (volume == null) {
+            errors.add("⚠️• Некорректный объём спирта")
+        } else if (volume <= 0) {
+            errors.add("⚠️• Объём должен быть больше нуля")
+        }
+
+        // Проверка крепости
         val strength = strengthStr.toDoubleOrNull()
-        val temp = tempStr.toDoubleOrNull()
-        val headsPercent = headsPercentStr.toDoubleOrNull() ?: 10.0
-        val tailsPercent = tailsPercentStr.toDoubleOrNull() ?: 15.0
-        val itogStrength = itogStrengthStr.toDoubleOrNull() ?: 40.0
+        if (strengthStr.isEmpty()) {
+            errors.add("⚠️• Крепость спирта не указана")
+        } else if (strength == null) {
+            errors.add("⚠️• Некорректная крепость")
+        } else if (strength !in 0.0..100.0) {
+            errors.add("⚠️• Крепость: от 0 до 100%")
+        }
 
-        if (volume == null || strength == null || temp == null) {
-            resultText.text = "Некорректный ввод чисел"
+        // Проверка итоговой крепости
+        if (itogStrengthStr.isEmpty()) {
+            hasItogWarning = true
+            itogStrength = 40.0 // значение по умолчанию
+        } else {
+            val input = itogStrengthStr.toDoubleOrNull()
+            when {
+                input == null -> {
+                    errors.add("⚠️• Некорректная крепость на выходе")
+                }
+                input !in 0.1..100.0 -> {
+                    errors.add("⚠️• Крепость на выходе: от 0.1 до 100%")
+                }
+                else -> {
+                    itogStrength = input
+                }
+            }
+        }
+
+        // Проверка температуры
+        val tempInput = tempStr.toDoubleOrNull()
+        if (tempStr.isEmpty()) {
+            hasTempWarning = true
+            temp = 20.0 // значение по умолчанию
+        } else if (tempInput == null) {
+            errors.add("⚠️• Некорректная температура")
+        } else if (tempInput !in -10.0..100.0) {
+            errors.add("⚠️• Температура: от -10 до 100°C")
+        } else {
+            temp = tempInput
+        }
+
+        // Проверка процента голов
+        if (headsPercentStr.isEmpty()) {
+            hasHeadsEmpty = true
+            headsPercent = 0.0 // значение по умолчанию
+        } else {
+            val input = headsPercentStr.toDoubleOrNull()
+            when {
+                input == null -> {
+                    errors.add("⚠️• Некорректный процент голов")
+                }
+                input < 0 -> {
+                    errors.add("⚠️• Процент голов не может быть отрицательным")
+                }
+                else -> {
+                    headsPercent = input
+                }
+            }
+        }
+
+        // Проверка процента хвостов
+        if (tailsPercentStr.isEmpty()) {
+            hasTailsEmpty = true
+            tailsPercent = 0.0 // значение по умолчанию
+        } else {
+            val input = tailsPercentStr.toDoubleOrNull()
+            when {
+                input == null -> {
+                    errors.add("⚠️• Некорректный процент хвостов")
+                }
+                input < 0 -> {
+                    errors.add("⚠️• Процент хвостов не может быть отрицательным")
+                }
+                else -> {
+                    tailsPercent = input
+                }
+            }
+        }
+
+        // Проверка на сумму голов и хвостов
+        if (headsPercent > 0 || tailsPercent > 0) {
+            if (headsPercent + tailsPercent >= 100) {
+                errors.add("⚠️• Сумма голов и хвостов не может быть ≥ 100%")
+            }
+        }
+
+        // Добавляем предупреждения как сообщения в общий поток ошибок
+        if (hasTempWarning) {
+            errors.add("⚠️• ❗ Не указана темп. → принято 20°C")
+        }
+        if (hasItogWarning) {
+            errors.add("⚠️• ❗ Не указана крепость → принято 40% об.")
+        }
+        if (hasHeadsEmpty) {
+            errors.add("⚠️• ❗ Не указаны головы → принято 0%")
+        }
+        if (hasTailsEmpty) {
+            errors.add("⚠️• ❗ Не указаны хвосты → принято 0%")
+        }
+
+        // Если есть ошибки — выводим все
+        if (errors.isNotEmpty()) {
+            val errorText = SpannableStringBuilder(errors.joinToString("\n"))
+            errorText.setSpan(
+                ForegroundColorSpan(ContextCompat.getColor(this, android.R.color.holo_orange_dark)),
+                0,
+                errorText.length,
+                android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            resultText.text = errorText
             return
         }
 
-        if (volume <= 0) {
-            resultText.text = "Объём спирта должен быть больше нуля"
-            return
-        }
-
-        if (strength !in 0.0..100.0) {
-            resultText.text = "Крепость спирта: от 0 до 100%"
-            return
-        }
-
-        if (temp !in -10.0..100.0) {
-            resultText.text = "Температура: от -10 до 100°C"
-            return
-        }
-
-        if (itogStrength !in 0.1..100.0) {
-            resultText.text = "Крепость итога: 0.1–100%"
-            return
-        }
-
-        // Проверка: сумма голов и хвостов не должна превышать 100%
-        if (headsPercent + tailsPercent >= 100) {
-            resultText.text = "Сумма голов и хвостов < 100%"
-            return
-        }
-
-        // Коррекция крепости по температуре (приведение к 20°C)
-        val correctedStrength = strength + (20 - temp) * 0.04
+        // Коррекция крепости по температуре
+        val correctedStrength = strength!! + (20 - temp) * 0.04
 
         if (correctedStrength <= 0 || correctedStrength > 100) {
-            resultText.text = "Ошибка коррекции: некорректная крепость"
+            resultText.text = "⚠️• Ошибка коррекции: некорректная крепость"
             return
         }
 
-        // 1. Абсолютный спирт: АС = СС × К0 / 100
-        val absoluteAlcohol = volume * correctedStrength / 100.0
-
-        // 2. Головы: Г = АС × g / 100
+        // Расчёт
+        val absoluteAlcohol = volume!! * correctedStrength / 100.0
         val headsVolume = absoluteAlcohol * headsPercent / 100.0
-
-        // 3. Хвосты: Х = АС × h / 100
         val tailsVolume = absoluteAlcohol * tailsPercent / 100.0
-
-        // 4. Тело (основная фракция)
         val bodyVolume = volume - headsVolume - tailsVolume
-
-        // 5. Объём итогового продукта указанной крепости (разбавление тела)
-        // V_итог = (объём_тела × крепость_тела) / целевая_крепость
-        val bodyStrength = correctedStrength // упрощение: крепость тела ≈ исходной (можно уточнить позже)
+        val bodyStrength = correctedStrength
         val itogVolume = (bodyVolume * bodyStrength) / itogStrength
 
-
-
-        // 7. Форматирование результата
-        val correctedLine = "Скорректированная крепость: ${"%.1f".format(correctedStrength)} %об."
-        val absoluteLine = "Абсолютный спирт: ${"%.2f".format(absoluteAlcohol)} л"
+        // Формируем результат
+        val correctedLine = "Корр. крепость: ${"%.1f".format(correctedStrength)} %об."
+        val absoluteLine = "Абс. спирт: ${"%.2f".format(absoluteAlcohol)} л"
         val headsLine = "Головы: ${"%.2f".format(headsVolume)} л"
         val tailsLine = "Хвосты: ${"%.2f".format(tailsVolume)} л"
-        val itogLine = "Продукт: $itogStrength%об: ${"%.2f".format(itogVolume)} л "
+        val itogLine = "Продукт $itogStrength%об: ${"%.2f".format(itogVolume)} л"
 
-        resultText.text = "$correctedLine\n$absoluteLine\n$headsLine\n$tailsLine\n$itogLine"
+        val result = "$correctedLine\n$absoluteLine\n$headsLine\n$tailsLine\n$itogLine"
+        resultText.text = result
     }
 
-    // Сохранение состояния
     private fun saveState() {
         sharedPreferences.edit {
             putString("distillate_volume", distillateVolumeEdit.text.toString())
@@ -179,7 +252,6 @@ class FractionalActivity : AppCompatActivity() {
         }
     }
 
-    // Восстановление состояния
     private fun restoreState() {
         distillateVolumeEdit.setText(sharedPreferences.getString("distillate_volume", ""))
         distillateStrengthEdit.setText(sharedPreferences.getString("distillate_strength", ""))
