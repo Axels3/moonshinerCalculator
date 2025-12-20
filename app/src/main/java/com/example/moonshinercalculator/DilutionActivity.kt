@@ -44,8 +44,6 @@ class DilutionActivity : AppCompatActivity() {
         resultTextView = findViewById(R.id.resultTextView)
         homeButton = findViewById(R.id.homeButton)
 
-        // Устанавливаем статичный режим
-        volumeValueLabel.text = "Режим: Начальный объём"
 
         // Общий TextWatcher
         val textWatcher = object : TextWatcher {

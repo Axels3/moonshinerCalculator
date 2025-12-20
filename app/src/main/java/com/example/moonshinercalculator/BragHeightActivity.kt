@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
+import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
 import android.view.View
@@ -93,6 +94,141 @@ class BragHeightActivity : AppCompatActivity() {
     }
 
     private fun calculate() {
+    val sugarStr = sugarAmountEdit.text.toString().trim()
+    val waterStr = waterVolumeEdit.text.toString().trim()
+
+    val errors = mutableListOf<String>()
+
+    // Проверка на пустые поля
+    if (sugarStr.isEmpty()) {
+        errors.add("⚠️• Количество сахара не указано")
+    }
+    if (waterStr.isEmpty()) {
+        errors.add("⚠️• Объём воды не указан")
+    }
+
+    // Проверка на валидность чисел
+    val sugarKg = sugarStr.toDoubleOrNull()
+    val waterVolume = waterStr.toDoubleOrNull()
+
+    if (sugarStr.isNotEmpty() && sugarKg == null) {
+        errors.add("⚠️• Некорректное значение сахара")
+    }
+    if (waterStr.isNotEmpty() && waterVolume == null) {
+        errors.add("⚠️• Некорректное значение объёма воды")
+    }
+
+    // Проверка на положительные значения
+    if (sugarKg != null && sugarKg <= 0) {
+        errors.add("⚠️• Количество сахара должно быть больше нуля")
+    }
+    if (waterVolume != null && waterVolume <= 0) {
+        errors.add("⚠️• Объём воды должен быть больше нуля")
+    }
+
+    // Если есть ошибки — выводим их и выходим
+    if (errors.isNotEmpty()) {
+        resultText.text = errors.joinToString("\n")
+        return
+    }
+
+    // Все данные корректны — продолжаем расчёт
+    val bragaVolume = sugarKg!! * 0.629 + waterVolume!!
+    val fermentationTankVolume = bragaVolume * 1.2 // +20%
+    val giromodule = waterVolume / sugarKg
+    val extraktivity = 259 - 259000 / (sugarKg * 384 / bragaVolume + 1000)
+    val alkogolVolume = sugarKg * 58.8 * coefficient / bragaVolume
+    val distillateOutput = sugarKg * (55.88 / 40) * coefficient
+
+    val baseText = """
+        Сахар: ${"%.2f".format(sugarKg)} кг
+        Вода: ${"%.2f".format(waterVolume)} л
+        Объём браги: ${"%.2f".format(bragaVolume)} л
+        Ёмкость для брожения: ${"%.2f".format(fermentationTankVolume)} л
+        Гидромодуль: ${"%.2f".format(giromodule)}:1
+        Экстрактивность: ${"%.2f".format(extraktivity)} Brix
+        Выход дистиллята 40%об: ${"%.2f".format(distillateOutput)} л
+        Крепость браги: ${"%.2f".format(alkogolVolume)} %об.
+    """.trimIndent()
+
+    // Сообщение о крепости
+    val message: String
+    val messageColor: Int
+    val iconRes = android.R.drawable.ic_dialog_info
+
+    when {
+        alkogolVolume > 24 -> {
+            message = "Превышена максимальная крепость браги"
+            messageColor = Color.RED
+        }
+        alkogolVolume > 15 -> {
+            message = "Превышена оптимальная крепость браги"
+            messageColor = Color.rgb(255, 100, 0)
+        }
+        else -> {
+            message = "Крепость браги оптимальная"
+            messageColor = Color.GREEN
+        }
+    }
+
+    val fullText = "$baseText\n$message"
+    val resultWithMessage = SpannableStringBuilder(fullText)
+
+    // Цвет сообщения
+    val messageStart = baseText.length + 1
+    val messageEnd = fullText.length
+    resultWithMessage.setSpan(
+        ForegroundColorSpan(messageColor),
+        messageStart,
+        messageEnd,
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+    )
+        // 🔥 Устанавливаем размер шрифта: 18sp (примерно 36px)
+        // 36 — это размер в пикселях. Можно использовать RelativeSizeSpan для масштаба
+
+        resultWithMessage.setSpan(
+            AbsoluteSizeSpan(28, true), // true = масштабировать относительно текущего размера шрифта
+            messageStart,
+            messageEnd,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+)
+
+
+
+    // Иконка
+    resultWithMessage.insert(messageStart, " ")
+    val drawable = ContextCompat.getDrawable(this, iconRes)
+    if (drawable != null) {
+        drawable.mutate().setTint(messageColor)
+        drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+        val imageSpan = ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM)
+        resultWithMessage.setSpan(
+            imageSpan,
+            messageStart,
+            messageStart + 1,
+            Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+        )
+    }
+
+    // Подсветка строки "Крепость браги", если > 15%
+    if (alkogolVolume > 15) {
+        val alcoholLineStart = baseText.indexOf("Крепость браги")
+        if (alcoholLineStart >= 0) {
+            val alcoholLineEnd = baseText.indexOf('\n', alcoholLineStart).let { if (it == -1) baseText.length else it }
+            resultWithMessage.setSpan(
+                ForegroundColorSpan(Color.RED),
+                alcoholLineStart,
+                alcoholLineEnd,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+    }
+
+    resultText.text = resultWithMessage
+    resultText.movementMethod = LinkMovementMethod.getInstance()
+}
+
+    /*private fun calculate() {
         val sugarStr = sugarAmountEdit.text.toString().trim()
         val waterStr = waterVolumeEdit.text.toString().trim()
 
@@ -211,7 +347,7 @@ class BragHeightActivity : AppCompatActivity() {
         }
 
         resultText.text = resultWithMessage
-    }
+    }*/
 
     private fun saveState() {
         sharedPreferences.edit {

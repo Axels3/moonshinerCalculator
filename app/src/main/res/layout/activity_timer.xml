@@ -10,7 +10,7 @@
     tools:context=".TimerActivity">
 
     <ImageView
-        android:id="@+id/homeButton3"
+        android:id="@+id/homeButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="?attr/selectableItemBackgroundBorderless"

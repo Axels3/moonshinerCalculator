@@ -1,6 +1,5 @@
 package com.example.moonshinercalculator
 
-import android.annotation.SuppressLint
 import android.media.AudioAttributes
 import android.media.SoundPool
 import android.os.Bundle
@@ -12,10 +11,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowCompat
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -29,7 +26,7 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var resetButton: ImageButton
     private lateinit var volumeInput: EditText
     private lateinit var speedResult: TextView
-    private lateinit var homeButton3: ImageButton
+    private lateinit var backButton: ImageButton
 
     private var countDownTimer: CountDownTimer? = null
     private var isTimerRunning = false
@@ -54,13 +51,13 @@ class TimerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_timer)
 
-        // Создаем временные файлы для звуков
+        // Создаем временные файлы для звуков (WAV)
         try {
-            shortToneFile = createTempSoundFile(createToneData(SHORT_TONE_MS))
-            longToneFile = createTempSoundFile(createToneData(LONG_TONE_MS))
+            shortToneFile = createWavFile(createToneData(SHORT_TONE_MS))
+            longToneFile = createWavFile(createToneData(LONG_TONE_MS))
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -71,12 +68,6 @@ class TimerActivity : AppCompatActivity() {
         setupButtonClick()
         setupInputListeners()
         setupTimeInputWatcher()
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
     }
 
     private fun initViews() {
@@ -86,7 +77,7 @@ class TimerActivity : AppCompatActivity() {
         resetButton = findViewById(R.id.resetButton)
         volumeInput = findViewById(R.id.volumeInput)
         speedResult = findViewById(R.id.speedResult)
-        homeButton3 = findViewById(R.id.homeButton3) // Инициализация кнопки "на главную"
+        backButton = findViewById(R.id.homeButton)
     }
 
     private fun initSound() {
@@ -100,17 +91,85 @@ class TimerActivity : AppCompatActivity() {
             .setAudioAttributes(audioAttributes)
             .build()
 
-        // Добавим прослушку загрузки звуков
+        // Загружаем звуки
         shortSoundId = soundPool.load(shortToneFile.absolutePath, 1)
         longSoundId = soundPool.load(longToneFile.absolutePath, 1)
 
-        // Проверка, что звуки загружены
-        soundPool.setOnLoadCompleteListener { _, _, _ ->
-            // Можно добавить лог, если нужно
+        // Проверка загрузки
+        soundPool.setOnLoadCompleteListener { _, sampleId, status ->
+            if (status != 0) {
+                // Можно логировать ошибку
+            }
         }
     }
 
-    @SuppressLint("SetTextI18n")
+
+    private fun createToneData(durationMs: Int): ByteArray {
+        val sampleRate = 8000
+        val numSamples = (durationMs * sampleRate / 1000)
+        val generatedSnd = ByteArray(2 * numSamples) // 16-bit PCM
+
+        for (i in 0 until numSamples) {
+            val angle = 2.0 * Math.PI * i / (sampleRate / TONE_FREQ_HZ)
+            val sample = (kotlin.math.sin(angle) * 32767).toInt()
+            generatedSnd[2 * i] = (sample and 0xFF).toByte()
+            generatedSnd[2 * i + 1] = (sample shr 8 and 0xFF).toByte()
+        }
+
+        return generatedSnd
+    }
+
+    private fun createWavFile(pcmData: ByteArray): File {
+        val wavFile = File.createTempFile("tone", ".wav", cacheDir)
+        wavFile.deleteOnExit()
+
+        FileOutputStream(wavFile).use { fos ->
+            val channels = 1
+            val bitsPerSample = 16
+            val byteRate = 8000 * channels * bitsPerSample / 8
+            val blockAlign = (channels * bitsPerSample / 8).toShort()
+            val dataSize = pcmData.size
+            val riffChunkSize = 36 + dataSize
+
+            // RIFF header
+            fos.write("RIFF".toByteArray())
+            fos.write(intToByteArray(riffChunkSize))
+            fos.write("WAVE".toByteArray())
+
+            // fmt subchunk
+            fos.write("fmt ".toByteArray())
+            fos.write(intToByteArray(16))
+            fos.write(shortToByteArray(1))
+            fos.write(shortToByteArray(channels.toShort()))
+            fos.write(intToByteArray(8000))
+            fos.write(intToByteArray(byteRate))
+            fos.write(shortToByteArray(blockAlign))
+            fos.write(shortToByteArray(bitsPerSample.toShort()))
+
+            // data subchunk
+            fos.write("data".toByteArray())
+            fos.write(intToByteArray(dataSize))
+            fos.write(pcmData)
+        }
+
+        return wavFile
+    }
+
+
+
+    private fun intToByteArray(i: Int): ByteArray = byteArrayOf(
+        (i and 0xff).toByte(),
+        (i shr 8 and 0xff).toByte(),
+        (i shr 16 and 0xff).toByte(),
+        (i shr 24 and 0xff).toByte()
+    )
+
+
+    private fun shortToByteArray(s: Short): ByteArray = byteArrayOf(
+        (s.toInt() and 0xff).toByte(),
+        (s.toInt() shr 8 and 0xff).toByte()
+    )
+
     private fun setupViews() {
         timerText.visibility = View.GONE
         timeInput.visibility = View.VISIBLE
@@ -121,35 +180,10 @@ class TimerActivity : AppCompatActivity() {
         volumeInput.setText("0")
         calculateSpeed()
 
-        // Установим цифровую клавиатуру
         timeInput.inputType = android.text.InputType.TYPE_CLASS_NUMBER
         volumeInput.inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
     }
 
-    private fun createToneData(durationMs: Int): ByteArray {
-        val sampleRate = 8000
-        val numSamples = ((durationMs * sampleRate) / 1000)
-        val generatedSnd = ByteArray(2 * numSamples)
-
-        for (i in 0 until numSamples) {
-            val angle = 2.0 * Math.PI * i / (sampleRate / TONE_FREQ_HZ)
-            val sample = (sin(angle) * 32767).toInt().toShort()
-            generatedSnd[2 * i] = (sample.toInt() and 0xFF).toByte()
-            generatedSnd[2 * i + 1] = ((sample.toInt() shr 8) and 0xFF).toByte()
-        }
-
-        return generatedSnd
-    }
-
-    @Throws(IOException::class)
-    private fun createTempSoundFile(soundData: ByteArray): File {
-        val tempFile = File.createTempFile("tone", ".pcm", cacheDir)
-        tempFile.deleteOnExit()
-        FileOutputStream(tempFile).use { fos -> fos.write(soundData) }
-        return tempFile
-    }
-
-    @SuppressLint("SetTextI18n")
     private fun setupButtonClick() {
         startStopButton.setOnClickListener {
             if (isTimerRunning) {
@@ -165,17 +199,14 @@ class TimerActivity : AppCompatActivity() {
             calculateSpeed()
         }
 
-        homeButton3.setOnClickListener {
-            finish() // Закрывает текущую Activity и возвращается на предыдущую
+        backButton.setOnClickListener {
+            finish()
         }
     }
 
     private fun setupInputListeners() {
         volumeInput.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                calculateSpeed()
-            }
-
+            override fun afterTextChanged(s: Editable?) = calculateSpeed()
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
@@ -184,8 +215,6 @@ class TimerActivity : AppCompatActivity() {
     private fun setupTimeInputWatcher() {
         timeInput.addTextChangedListener(object : TextWatcher {
             private var isUpdating = false
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (isUpdating) return
@@ -204,17 +233,17 @@ class TimerActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
                 calculateSpeed()
             }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         })
     }
 
-    private fun formatInputBuffer(input: String): String {
-        return when (input.length) {
-            0 -> "00:00"
-            1 -> "00:0$input"
-            2 -> "00:${input.takeLast(2)}"
-            3 -> "0${input[0]}:${input.takeLast(2)}"
-            else -> "${input.takeLast(4).take(2)}:${input.takeLast(2)}"
-        }
+    private fun formatInputBuffer(input: String): String = when (input.length) {
+        0 -> "00:00"
+        1 -> "00:0$input"
+        2 -> "00:${input.takeLast(2)}"
+        3 -> "0${input[0]}:${input.takeLast(2)}"
+        else -> "${input.takeLast(4).take(2)}:${input.takeLast(2)}"
     }
 
     private fun startTimer() {
@@ -247,12 +276,14 @@ class TimerActivity : AppCompatActivity() {
                 val elapsed = targetSeconds - secondsLeft
                 timerText.text = formatTime(elapsed)
 
-                if (secondsLeft <= 5L) {
+                // Короткий звук за 2 и 1 секунду
+                if (secondsLeft == 2L || secondsLeft == 1L) {
                     soundPool.play(shortSoundId, 1f, 1f, 0, 0, 1f)
                 }
             }
 
             override fun onFinish() {
+                // Длинный звук на последней секунде (500 мс)
                 soundPool.play(longSoundId, 1f, 1f, 0, 0, 1f)
                 timerFinished()
             }
@@ -266,9 +297,9 @@ class TimerActivity : AppCompatActivity() {
         countDownTimer?.cancel()
         isTimerRunning = false
         startStopButton.text = "Старт"
+        timerText.visibility = View.GONE
         timeInput.visibility = View.VISIBLE
         resetButton.visibility = View.VISIBLE
-        timerText.visibility = View.GONE
 
         val elapsedText = timerText.text.toString()
         val (minutes, seconds) = parseTime(elapsedText) ?: (0L to 0L)
@@ -298,20 +329,14 @@ class TimerActivity : AppCompatActivity() {
         return minutes to seconds
     }
 
-    @SuppressLint("DefaultLocale")
     private fun formatTime(totalSeconds: Long): String {
         val minutes = totalSeconds / 60
         val seconds = totalSeconds % 60
         return String.format("%02d:%02d", minutes, seconds)
     }
 
-    @SuppressLint("SetTextI18n")
     private fun calculateSpeed() {
-        val timeStr = if (isTimerRunning) {
-            timerText.text.toString()
-        } else {
-            timeInput.text.toString()
-        }
+        val timeStr = if (isTimerRunning) timerText.text.toString() else timeInput.text.toString()
         val volumeStr = volumeInput.text.toString().trim()
 
         if (volumeStr.isEmpty()) {
