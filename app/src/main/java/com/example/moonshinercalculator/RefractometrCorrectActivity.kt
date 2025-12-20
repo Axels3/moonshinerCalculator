@@ -1,5 +1,6 @@
 package com.example.moonshinercalculator
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
@@ -73,6 +74,7 @@ class RefractometrCorrectActivity : AppCompatActivity() {
     )
 
     // === Проверка ввода ===
+    @SuppressLint("SetTextI18n")
     private fun validateInput(ogBrix: Double, fgBrix: Double): Boolean {
         if (ogBrix < 0 || ogBrix > 75 || ogBrix.isNaN()) {
             resultText.text = "Начальные показания Brix должны быть числом от 0 до 75."
@@ -104,7 +106,7 @@ class RefractometrCorrectActivity : AppCompatActivity() {
         val finalStr = finalBrixEdit.text.toString().trim()
 
         if (initialStr.isEmpty() || finalStr.isEmpty()) {
-            resultText.text = "Ожидание ввода данных..."
+            resultText.text = "⚠️• Ожидание ввода данных..."
             return
         }
 
@@ -112,7 +114,7 @@ class RefractometrCorrectActivity : AppCompatActivity() {
         val fgBrix = finalStr.toDoubleOrNull()
 
         if (ogBrix == null || fgBrix == null) {
-            resultText.text = "Некорректный ввод чисел"
+            resultText.text = "⚠️• Некорректный ввод чисел"
             return
         }
 
@@ -144,18 +146,19 @@ class RefractometrCorrectActivity : AppCompatActivity() {
     }
 
     // === Новая функция: расчёт ТОЛЬКО по НП (OG_brix) ===
+    @SuppressLint("SetTextI18n")
     private fun calculateAndDisplayByOg() {
         val initialStr = initialBrixEdit.text.toString().trim()
 
         if (initialStr.isEmpty()) {
-            textView12.text = "Введите начальные Brix"
+            textView12.text = "⚠️• Введите начальные Brix"
             return
         }
 
         val ogBrix = initialStr.toDoubleOrNull()
 
         if (ogBrix == null) {
-            textView12.text = "Некорректный ввод"
+            textView12.text = "⚠️• Некорректный ввод"
             return
         }
 
